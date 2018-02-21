@@ -24,6 +24,9 @@
 #'   data.frame
 #' @param trim logical; do you want the worksheet extent to be modified to
 #'   correspond exactly to the cells being edited?
+#' @param lookup logical; regarding the type of gsheet you are working with. 
+#' Should \code{googlesheets} look into \code{gs_ls()} ? \code{lookup} to F
+#' if the gsheet does not lay into you google drive.
 #' @template verbose
 #'
 #' @seealso \code{\link{gs_add_row}}
@@ -58,7 +61,7 @@
 #' @export
 gs_edit_cells <- function(ss, ws = 1, input = '', anchor = 'A1',
                           byrow = FALSE, col_names = NULL, trim = FALSE,
-                          verbose = TRUE) {
+                          verbose = TRUE, lookup = T) {
 
   sleep <- 1 ## we must backoff or operations below don't complete before
              ## next one starts; believe it or not, shorter sleeps cause
@@ -163,7 +166,7 @@ gs_edit_cells <- function(ss, ws = 1, input = '', anchor = 'A1',
   }
 
   Sys.sleep(sleep)
-  ss <- ss$sheet_key %>% gs_key(verbose = FALSE)
+  ss <- gs_key(ss$sheet_key, lookup = F, visibility = ss$visibilty, verbose = FALSE)
   invisible(ss)
 }
 
